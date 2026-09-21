@@ -1,0 +1,29 @@
+name: CI & Quality Assurance
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate Repository Governance & Structure
+        run: |
+          echo "Validating repository governance files..."
+          test -f README.md && echo "README.md OK"
+          test -f LICENSE && echo "LICENSE OK"
+          test -f CONTRIBUTING.md && echo "CONTRIBUTING.md OK"
+          test -f SECURITY.md && echo "SECURITY.md OK"
+          test -f CODE_OF_CONDUCT.md && echo "CODE_OF_CONDUCT.md OK"
+          test -f docs/wiki/Home.md && echo "docs/wiki/Home.md OK"

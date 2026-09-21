@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this academic software, laboratory materials, or research notebooks, please cite it as below."
+authors:
+  - family-names: "EL HADJI"
+    given-names: "Oussama"
+    affiliation: "École Nationale d'Intelligence Artificielle et du Digital (ENIAD), Mohammed First University"
+title: "ENIAD Agile Scrum Delivery & Machine Learning Service"
+version: 1.0.0
+date-released: 2026-09-21
+url: "https://github.com/Bosaj/eniad-agile-scrum-project"
+repository-code: "https://github.com/Bosaj/eniad-agile-scrum-project"
+keywords:
+  - "artificial-intelligence"
+  - "academic-curriculum"
+  - "eniad"
+  - "software-engineering"
