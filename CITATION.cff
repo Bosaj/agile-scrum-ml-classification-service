@@ -7,8 +7,8 @@ authors:
 title: "ENIAD Agile Scrum Delivery & Machine Learning Service"
 version: 1.0.0
 date-released: 2026-09-21
-url: "https://github.com/Bosaj/eniad-agile-scrum-project"
-repository-code: "https://github.com/Bosaj/eniad-agile-scrum-project"
+url: "https://github.com/Bosaj/agile-scrum-ml-classification-service"
+repository-code: "https://github.com/Bosaj/agile-scrum-ml-classification-service"
 keywords:
   - "artificial-intelligence"
   - "academic-curriculum"

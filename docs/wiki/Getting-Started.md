@@ -18,8 +18,8 @@ Ensure your system meets the required runtime dependencies:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/Bosaj/eniad-agile-scrum-project.git
-   cd eniad-agile-scrum-project
+   git clone https://github.com/Bosaj/agile-scrum-ml-classification-service.git
+   cd agile-scrum-ml-classification-service
    ```
 
 2. **Virtual Environment Setup (Python modules)**:

@@ -1,7 +1,7 @@
 # Welcome to the ENIAD Agile Scrum Delivery & Machine Learning Service Documentation Wiki 📖
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
-[![Institution: ENIAD Berkane](https://img.shields.io/badge/Institution-ENIAD%20Berkane-FF6B00?style=flat-square)](https://github.com/Bosaj/eniad-agile-scrum-project)
+[![Institution: ENIAD Berkane](https://img.shields.io/badge/Institution-ENIAD%20Berkane-FF6B00?style=flat-square)](https://github.com/Bosaj/agile-scrum-ml-classification-service)
 [![Project Board](https://img.shields.io/badge/Project_Board-Project_36-blue?style=flat-square&logo=github)](https://github.com/users/Bosaj/projects/36)
 [![Curated List](https://img.shields.io/badge/Curated_List-ENIAD_Academic_Projects-gold?style=flat-square&logo=github)](https://github.com/stars/Bosaj/lists/eniad-academic-projects)
 

@@ -1,5 +1,5 @@
 {
-  "name": "eniad-agile-scrum-project",
+  "name": "agile-scrum-ml-classification-service",
   "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
   "customizations": {
     "vscode": {
