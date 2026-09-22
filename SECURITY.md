@@ -2,19 +2,17 @@
 
 ## Supported Versions
 
+We actively maintain and provide security patches for the following versions:
+
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.0.x   | :white_check_mark: |
+| 1.x     | :white_check_mark: |
+| < 1.0   | :x:                |
 
 ## Reporting a Vulnerability
 
-We take security seriously. If you discover a security vulnerability, please do NOT create a public GitHub issue. Instead, please report it directly via email to:
+If you discover a security vulnerability within this project, please follow these guidelines:
 
-📧 **oussousselhadji@gmail.com**
-
-Please provide:
-- A description of the vulnerability.
-- Steps to reproduce or proof-of-concept.
-- Potential impact.
-
-We will acknowledge your report within 48 hours and work towards a swift resolution.
+1. **Do not create a public issue.**
+2. Send an email directly to **oussousselhadji@gmail.com** with details about the vulnerability, including steps to reproduce and potential impact.
+3. You will receive an acknowledgment within 48 hours, followed by updates on the remediation timeline.

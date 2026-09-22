@@ -1,27 +1,31 @@
 # Contributing Guidelines
 
-Thank you for your interest in contributing to this academic engineering repository!
+Thank you for your interest in contributing to this project!
 
 ## Code of Conduct
 
-This project and everyone participating in it is governed by our [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+By participating in this project, you agree to abide by the terms of our [Code of Conduct](CODE_OF_CONDUCT.md).
 
-## How Can I Contribute?
+## Getting Started
 
-### Reporting Bugs
-- Ensure the bug was not already reported by searching on GitHub under Issues.
-- Open a new issue with a clear title and description, including reproduction steps.
+1. **Fork the Repository** on GitHub.
+2. **Clone your fork** locally:
+   ```bash
+   git clone https://github.com/Bosaj/<repo-name>.git
+   ```
+3. **Create a Feature Branch**:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
 
-### Pull Requests
-1. Fork the repo and create your branch from `main`.
-2. Ensure your code conforms to the repository's styling and formatting standards.
-3. Test your changes locally before opening a pull request.
-4. Issue a Pull Request with a comprehensive description of the changes made.
+## Development Workflow
 
-## Commit Conventions
-We adhere to Conventional Commits:
-- `feat`: A new feature or module lab
-- `fix`: A bug fix or error correction
-- `docs`: Documentation changes only
-- `style`: Changes that do not affect the meaning of the code
-- `refactor`: A code change that neither fixes a bug nor adds a feature
+- Follow clean code practices, PEP 8 / ESLint formatting guidelines, and include relevant documentation for new features.
+- Ensure all automated tests pass before submitting changes.
+- Write clear, conventional commit messages (`feat: ...`, `fix: ...`, `docs: ...`).
+
+## Pull Request Process
+
+1. Push your changes to your fork.
+2. Open a Pull Request targeting the `main` branch.
+3. Provide a clear description of the problem solved, architectural choices made, and screenshots/logs if applicable.
