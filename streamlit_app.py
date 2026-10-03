@@ -11,23 +11,22 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-CURRENT_DIR = Path(__file__).parent
-MODEL_PATH = CURRENT_DIR / "scikit_classification_model.joblib"
+ROOT_DIR = Path(__file__).parent
+MODEL_CANDIDATES = [
+    ROOT_DIR / "test" / "scikit_classification_model.joblib",
+    ROOT_DIR / "scikit_classification_model.joblib",
+    ROOT_DIR / "test" / "best_classification_model.pkl",
+]
 
 
 @st.cache_resource
 def load_model():
-    if MODEL_PATH.exists():
-        return joblib.load(MODEL_PATH)
-    # Fallback to pickle if available
-    pkl_path = CURRENT_DIR / "best_classification_model.pkl"
-    if pkl_path.exists():
-        try:
-            import pickle
-            with open(pkl_path, "rb") as file:
-                return pickle.load(file)
-        except Exception:
-            pass
+    for candidate in MODEL_CANDIDATES:
+        if candidate.exists():
+            try:
+                return joblib.load(candidate)
+            except Exception:
+                pass
     return None
 
 
@@ -47,7 +46,7 @@ with col_left:
     sexe = st.selectbox("Sexe biologique", options=["M", "F"])
     poids = st.number_input("Poids corporel (kg)", min_value=20.0, max_value=220.0, value=74.5)
     taille = st.number_input("Taille (cm)", min_value=80.0, max_value=240.0, value=172.0)
-    
+
     # Calcul dynamique de l'IMC
     imc = poids / ((taille / 100) ** 2)
     st.metric("Indice de Masse Corporelle (IMC)", f"{imc:.1f} kg/m²")
@@ -93,7 +92,7 @@ st.divider()
 
 if st.button("🚀 Analyser la Compatibilité Clinique", type="primary", use_container_width=True):
     model = load_model()
-    
+
     if model is None:
         st.error("Le modèle de classification n'a pas pu être chargé.")
     else:
@@ -109,27 +108,27 @@ if st.button("🚀 Analyser la Compatibilité Clinique", type="primary", use_con
             "Antécédents_médicaux": antecedents,
             "Allergies": allergies,
         }
-        
+
         encoded = encode_categorical(input_dict)
         df_input = pd.DataFrame([encoded])
-        
+
         try:
             pred = model.predict(df_input)[0]
             proba = model.predict_proba(df_input)[0]
             confidence = proba[pred] * 100
-            
+
             st.subheader("Diagnostic de Compatibilité :")
-            
+
             if pred == 1:
                 st.success(f"✅ **Traitement Compatible avec le profil patient** (Niveau de confiance : {confidence:.1f}%)")
             else:
                 st.error(f"❌ **Risque d'Incompatibilité Détecté** (Niveau de confiance : {confidence:.1f}%)")
-                
+
             res_col1, res_col2 = st.columns(2)
             with res_col1:
                 st.metric("Probabilité de Compatibilité", f"{proba[1]*100:.1f}%")
             with res_col2:
                 st.metric("Probabilité de Contre-indication", f"{proba[0]*100:.1f}%")
-                
+
         except Exception as e:
             st.error(f"Erreur d'inférence : {e}")
