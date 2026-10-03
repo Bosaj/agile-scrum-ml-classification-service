@@ -1,56 +1,75 @@
-import pickle
-
+import os
+from pathlib import Path
+import joblib
 import pandas as pd
 import streamlit as st
-from sklearn.ensemble import RandomForestClassifier
+
+st.set_page_config(
+    page_title="Prédiction de Compatibilité Médicale · ENIAD",
+    page_icon="💊",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
+CURRENT_DIR = Path(__file__).parent
+MODEL_PATH = CURRENT_DIR / "scikit_classification_model.joblib"
 
 
-# Fonction pour charger le modèle
+@st.cache_resource
 def load_model():
-    try:
-        with open("best_classification_model.pkl", "rb") as file:
-            return pickle.load(file)
-    except FileNotFoundError:
-        # Créer un modèle par défaut si aucun n'existe
-        model = RandomForestClassifier(n_estimators=100, random_state=42)
-        # On peut pré-entraîner le modèle ici si nécessaire
-        return model
+    if MODEL_PATH.exists():
+        return joblib.load(MODEL_PATH)
+    # Fallback to pickle if available
+    pkl_path = CURRENT_DIR / "best_classification_model.pkl"
+    if pkl_path.exists():
+        try:
+            import pickle
+            with open(pkl_path, "rb") as file:
+                return pickle.load(file)
+        except Exception:
+            pass
+    return None
 
 
-# Titre de l'application
-st.title("Prédictions de Compatibilité des Traitements")
+st.title("💊 Prédictions de Compatibilité des Traitements")
+st.caption("École Nationale d'Intelligence Artificielle et du Digital (ENIAD) · Service ML Médical")
 
-# Description
-st.write(
-    "Cette application prédit la compatibilité des traitements pour un patient en fonction de ses caractéristiques."
-)
+st.markdown("""
+Cette application clinique évalue la compatibilité d'un protocole de traitement pour un patient
+en fonction de ses indicateurs biométriques, de son mode de vie et de son historique médical.
+""")
 
-# Collecte des entrées utilisateur
-st.header("Entrer les informations du patient")
+col_left, col_right = st.columns([1, 1])
 
-age = st.number_input("Âge", min_value=0, max_value=120, value=30)
-sexe = st.selectbox("Sexe", options=["M", "F"])
-poids = st.number_input("Poids (kg)", min_value=0.0, max_value=200.0, value=70.0)
-taille = st.number_input("Taille (cm)", min_value=50.0, max_value=250.0, value=170.0)
-fumeur = st.selectbox("Fumeur", options=["Oui", "Non"])
-alcool = st.selectbox("Consommation d'alcool", options=["Oui", "Non"])
-activite_physique = st.selectbox(
-    "Niveau d'activité physique", options=["Faible", "Moyenne", "Élevée"]
-)
-antecedents = st.selectbox(
-    "Antécédents médicaux", options=["Aucun", "Cardiovasculaire", "Chronique", "Autre"]
-)
-allergies = st.selectbox(
-    "Type d'allergies", options=["Aucune", "Médicamenteuse", "Autre"]
-)
+with col_left:
+    st.subheader("📋 Données Biométriques & Démographiques")
+    age = st.number_input("Âge du patient", min_value=1, max_value=120, value=45)
+    sexe = st.selectbox("Sexe biologique", options=["M", "F"])
+    poids = st.number_input("Poids corporel (kg)", min_value=20.0, max_value=220.0, value=74.5)
+    taille = st.number_input("Taille (cm)", min_value=80.0, max_value=240.0, value=172.0)
+    
+    # Calcul dynamique de l'IMC
+    imc = poids / ((taille / 100) ** 2)
+    st.metric("Indice de Masse Corporelle (IMC)", f"{imc:.1f} kg/m²")
 
-# Calculer l'IMC
-imc = poids / ((taille / 100) ** 2)
+with col_right:
+    st.subheader("🩺 Mode de Vie & Antécédents")
+    fumeur = st.selectbox("Statut tabagique", options=["Non", "Oui"])
+    alcool = st.selectbox("Consommation d'alcool", options=["Non", "Oui"])
+    activite_physique = st.selectbox(
+        "Niveau d'activité physique", options=["Faible", "Moyenne", "Élevée"]
+    )
+    antecedents = st.selectbox(
+        "Antécédents médicaux majeurs",
+        options=["Aucun", "Cardiovasculaire", "Chronique", "Autre"],
+    )
+    allergies = st.selectbox(
+        "Type d'allergies déclarées",
+        options=["Aucune", "Médicamenteuse", "Autre"],
+    )
 
 
-# Fonction pour encoder les variables catégorielles
 def encode_categorical(data):
-    # Encodage one-hot pour les variables catégorielles
     activite_mapping = {"Faible": 0, "Moyenne": 1, "Élevée": 2}
     antecedents_mapping = {
         "Aucun": 0,
@@ -60,46 +79,25 @@ def encode_categorical(data):
     }
     allergies_mapping = {"Aucune": 0, "Médicamenteuse": 1, "Autre": 2}
 
-    data["Sexe"] = 1 if data["Sexe"] == "M" else 0
-    data["Fumeur"] = 1 if data["Fumeur"] == "Oui" else 0
-    data["Alcool"] = 1 if data["Alcool"] == "Oui" else 0
-    data["Activité_physique"] = activite_mapping[data["Activité_physique"]]
-    data["Antécédents_médicaux"] = antecedents_mapping[data["Antécédents_médicaux"]]
-    data["Allergies"] = allergies_mapping[data["Allergies"]]
-
-    return data
-
-
-# Préparer les données pour la prédiction
-def prepare_data(input_values):
-    input_dict = {
-        "Age": age,
-        "Sexe": sexe,
-        "Poids": poids,
-        "Taille": taille,
-        "IMC": imc,
-        "Fumeur": fumeur,
-        "Alcool": alcool,
-        "Activité_physique": activite_physique,
-        "Antécédents_médicaux": antecedents,
-        "Allergies": allergies,
-    }
-
-    # Encoder les données
-    encoded_dict = encode_categorical(input_dict)
-
-    # Convertir en DataFrame
-    return pd.DataFrame([encoded_dict])
+    encoded = dict(data)
+    encoded["Sexe"] = 1 if data["Sexe"] == "M" else 0
+    encoded["Fumeur"] = 1 if data["Fumeur"] == "Oui" else 0
+    encoded["Alcool"] = 1 if data["Alcool"] == "Oui" else 0
+    encoded["Activité_physique"] = activite_mapping[data["Activité_physique"]]
+    encoded["Antécédents_médicaux"] = antecedents_mapping[data["Antécédents_médicaux"]]
+    encoded["Allergies"] = allergies_mapping[data["Allergies"]]
+    return encoded
 
 
-# Bouton de prédiction
-if st.button("Prédire la compatibilité"):
-    # Charger le modèle
+st.divider()
+
+if st.button("🚀 Analyser la Compatibilité Clinique", type="primary", use_container_width=True):
     model = load_model()
-
-    # Préparer les données
-    input_data = prepare_data(
-        {
+    
+    if model is None:
+        st.error("Le modèle de classification n'a pas pu être chargé.")
+    else:
+        input_dict = {
             "Age": age,
             "Sexe": sexe,
             "Poids": poids,
@@ -111,36 +109,27 @@ if st.button("Prédire la compatibilité"):
             "Antécédents_médicaux": antecedents,
             "Allergies": allergies,
         }
-    )
-
-    try:
-        # Effectuer la prédiction
-        prediction = model.predict(input_data)[0]
-
-        # Afficher le résultat avec un niveau de confiance simulé
-        confidence = model.predict_proba(input_data)[0]
-        max_confidence = max(confidence) * 100
-
-        if prediction == 1:
-            st.success(
-                f"Le traitement est compatible avec le patient. (Confiance: {max_confidence:.1f}%)"
-            )
-        else:
-            st.error(
-                f"Le traitement n'est PAS compatible avec le patient. (Confiance: {max_confidence:.1f}%)"
-            )
-
-        # Afficher des informations supplémentaires
-        st.info("""
-        Facteurs pris en compte dans la prédiction:
-        - Données démographiques (âge, sexe)
-        - Paramètres physiques (poids, taille, IMC)
-        - Mode de vie (tabagisme, alcool, activité physique)
-        - Historique médical (antécédents, allergies)
-        """)
-
-    except Exception as e:  # noqa: BLE001
-        st.error(f"Une erreur s'est produite lors de la prédiction: {e!s}")
-        st.warning(
-            "Veuillez vérifier que le modèle est correctement entraîné et que toutes les entrées sont valides."
-        )
+        
+        encoded = encode_categorical(input_dict)
+        df_input = pd.DataFrame([encoded])
+        
+        try:
+            pred = model.predict(df_input)[0]
+            proba = model.predict_proba(df_input)[0]
+            confidence = proba[pred] * 100
+            
+            st.subheader("Diagnostic de Compatibilité :")
+            
+            if pred == 1:
+                st.success(f"✅ **Traitement Compatible avec le profil patient** (Niveau de confiance : {confidence:.1f}%)")
+            else:
+                st.error(f"❌ **Risque d'Incompatibilité Détecté** (Niveau de confiance : {confidence:.1f}%)")
+                
+            res_col1, res_col2 = st.columns(2)
+            with res_col1:
+                st.metric("Probabilité de Compatibilité", f"{proba[1]*100:.1f}%")
+            with res_col2:
+                st.metric("Probabilité de Contre-indication", f"{proba[0]*100:.1f}%")
+                
+        except Exception as e:
+            st.error(f"Erreur d'inférence : {e}")
