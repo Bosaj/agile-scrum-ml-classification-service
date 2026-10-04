@@ -22,6 +22,7 @@
   <a href="https://github.com/users/Bosaj/projects"><img src="https://img.shields.io/badge/Project_Board-Project_36-blue?style=flat-square&logo=github" alt="Project Board" /></a>
   <a href="https://github.com/stars/Bosaj/lists/eniad-academic-projects"><img src="https://img.shields.io/badge/Curated_List-ENIAD_Academic_Projects-gold?style=flat-square&logo=github" alt="Curated List" /></a>
   <img src="https://img.shields.io/badge/Institution-ENIAD%20Berkane-FF6B00?style=flat-square" alt="ENIAD Berkane" />
+  <a href="streamlit_app.py"><img src="https://img.shields.io/badge/Streamlit-Medical%20ML%20Classifier-FF4B4B?style=flat-square&logo=streamlit&logoColor=white" alt="Streamlit App" /></a>
 </p>
 
 </div>
@@ -85,10 +86,18 @@ Comprehensive architectural explanations, step-by-step lab walk-throughs, and me
 - Git installed on your local workstation
 - Development runtime corresponding to the target laboratory (Python 3.10+, Java JDK 17+, Android Studio, or C++ compiler)
 
-### Installation & Cloning
+### Installation & Running
+
 ```bash
+# Clone the repository
 git clone https://github.com/Bosaj/agile-scrum-ml-classification-service.git
 cd agile-scrum-ml-classification-service
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Launch the interactive Streamlit clinical prediction service
+streamlit run streamlit_app.py
 ```
 
 ---
